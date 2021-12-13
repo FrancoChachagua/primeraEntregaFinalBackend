@@ -27,7 +27,7 @@ function getCards(url) {
         .then(response => response.text())
         .then(data=>JSON.parse(data))
         .then(response =>{
-            const mapCardsDos = response.map(prod => `<div class="d-inline-flex m-2">
+            const mapCardsDos = response.map(prod => `<div class="d-inline-flex">
                                                         <div class="card" id="${prod.id}" key=${prod.id}>
                                                             <div class="card-header"> 
                                                                 <p class="text-center">  ${prod.nombre}  </p>
@@ -180,7 +180,7 @@ fetch(carritoURL)
         let timestampCart = response[0].timestamp;
         let lastCart = response[0].producto;
 
-        const lastCartInformation = `<b> <span class="text-primary">Id carrito: ${idCart} </span> --- <span class="ml-4">Hora de creacion${timestampCart}</span> </b>` ;
+        const lastCartInformation = `<b> <span class="text-primary">Id carrito: ${idCart} </span> --- <span class="text-info">Hora de creacion:  ${timestampCart}</span> </b>` ;
         $insertTableDCart.innerHTML += lastCartInformation;  
         
         // No duplicados
