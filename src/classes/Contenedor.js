@@ -1,9 +1,8 @@
 import fs from 'fs'
-import makeId, { JSClock, makeRandomId, __dirname } from '../utils.js';
+import makeId, { JSClock, makeRandomId, __dirname, deepCopyFunction } from '../utils.js';
 
-// const productURL = `${__dirname}/files/productos.txt`
-const productosURL = __dirname+'/files/productos.txt';
-const carritoDos = __dirname+'/files/carrito.txt';
+const productosURL = __dirname+'/public/files/productos.txt';
+const carritoDos = __dirname+'/public/files/carrito.txt';
 let time = JSClock();
 class Contenedor{
     async save(prod){
@@ -62,6 +61,7 @@ class Contenedor{
             body.timestamp = `${time.calendary} ${time.hour}`;
             body.codigo = makeRandomId(5);   
             body.precio = parseInt(body.precio);
+            // console.log(body);
             if(!productList.some(prd=>prd.id===id)) {
                 return {error:'producto no encontrado'}
             }
@@ -131,24 +131,23 @@ class Contenedor{
     }
     async createCart(){
         try {
-            let dataCart = await fs.promises.readFile(carritoURL , 'utf-8')
+            let dataCart = await fs.promises.readFile(carritoDos , 'utf-8')
             let cartList = JSON.parse(dataCart);
-            // let time = JSClock();
             let cart = {
                 id:makeId(cartList),
                 timestamp:`${time.calendary} ${time.hour}`,
                 producto:[]
             }
-            cartList.push(cart);
+            // Los carritos se cargan al reves, para que el ultimo siempre este en el indice 0, para yo usarlo
+            cartList.unshift(cart);
             try{
                 let thisId = `Id: ${cart.id}`
-                await fs.promises.writeFile(carritoURL,JSON.stringify(cartList,null,2));
-                return {message:`Carrito creado con exito, ${thisId}`}
+                await fs.promises.writeFile(carritoDos, JSON.stringify(cartList, null, 2));
+                return {message:"Carrito creado con exito", id:thisId }
             } catch(error) {
                 return {err: `No se pudo crear el carrito`}
             }
         } catch {
-            let time = JSClock();
             let cart = {
                 id:1,
                 timestamp:`${time.calendary} ${time.hour}`,
@@ -156,7 +155,7 @@ class Contenedor{
             }
             try {
                 let thisId = `Id: ${cart.id}`
-                await fs.promises.writeFile(carritoURL, JSON.stringify([cart], null, 2));
+                await fs.promises.writeFile(carritoDos, JSON.stringify([cart], null, 2));
                 return {message:"Carrito creado con exito", id:thisId }
             }catch(error){
                 return console.log(`No se pudo crear el carrito`);
@@ -165,12 +164,12 @@ class Contenedor{
     }
     async deleteCart(id){
         try {
-            let dataCart = await fs.promises.readFile(carritoURL , 'utf-8')
+            let dataCart = await fs.promises.readFile(carritoDos , 'utf-8')
             let cartList = JSON.parse(dataCart);
             let cartDelete = cartList.filter(function(prod) {
                 return prod.id !== id; 
             });
-            fs.writeFileSync(carritoURL, JSON.stringify(cartDelete, null, 2));
+            fs.writeFileSync(carritoDos, JSON.stringify(cartDelete, null, 2));
             return {message:"Carrito borrado con exito!"}
         }catch (error) {
             return {error:`Carrito no encontrado ${error}`}
@@ -182,7 +181,7 @@ class Contenedor{
             let cartList = JSON.parse(dataCart);
             let object = cartList.find(evt => evt.id === id);
             if (object) {
-                return {object:object.productos}
+                return {object:object.producto}
             }else{
                 return {object:'error : Carrito no encontrado'}
             }
@@ -197,7 +196,7 @@ class Contenedor{
             let dataProducts = await fs.promises.readFile(productosURL, 'utf-8')
             let products = JSON.parse(dataProducts);
             let productIdParams = products.find(prod => prod.id === id);
-            cartList.push(productIdParams)
+            cartList[0].producto.push(productIdParams)
             try{
                 await fs.promises.writeFile(carritoDos,JSON.stringify(cartList,null,2));
                 return {message:"Carrito actualizado"}
@@ -207,8 +206,29 @@ class Contenedor{
         } catch (error) {
             return  {object:'error : Carrito inexistente'}
         }
-    }   
+    }
+    async deleteProductForId(id,id_prod){
+        try {
+            let dataCart = await fs.promises.readFile(carritoDos , 'utf-8')
+            let cartList = JSON.parse(dataCart);
+            let user = cartList.filter(us=>us.id===id);
+            let carritoD = user[0].producto.filter(us=>us.id !==id_prod);
+            user[0].producto = carritoD;
+            try {
+                await fs.promises.writeFile(carritoDos,JSON.stringify(cartList,null,2));
+                return {a:carritoD,b:user}
+            } catch (error) {
+                return {object:'error : Carrito inexistente'}
+            }
+            
+        } catch (error) {
+            return  {object:'error : Carrito inexistente'}
+        }
+    }
     
 }
 
 export default Contenedor;
+
+
+

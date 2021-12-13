@@ -1,13 +1,13 @@
 [
   {
     "id": 1,
-    "timestamp": "6/12/2021 12:13:49 P.M.",
-    "nombre": "Medialunas",
-    "descripcion": "Un panificado dulce elaborado para comer en el desayuno o la merienda, también llamado croissant!",
-    "codigo": "yiZwz",
-    "foto": "http://localhost:8080/1639062829192image.jpeg",
-    "precio": 450,
-    "stock": "30"
+    "nombre": "Baklava",
+    "precio": 2000,
+    "descripcion": "Baklava",
+    "stock": "33",
+    "foto": "https://elgourmet.s3.amazonaws.com/recetas/cover_hut6g4oskd_eg-pcma-episodio-21-baklava-hi.JPG",
+    "timestamp": "12/12/2021 6:15:05 A.M.",
+    "codigo": "sRqof"
   },
   {
     "id": 2,
@@ -75,18 +75,8 @@
     "nombre": "Brownie",
     "descripcion": "Bizcocho de chocolate pequeño, cubierto con jarabe espeso de chocolate y puede llevar dentro trocitos de nueces, chocolate, butterscotch y mantequilla de maní!",
     "codigo": "cUyCu",
-    "foto": "http://localhost:8080/1639064118808image.jpeg",
+    "foto": "https://celebratingsweets.com/wp-content/uploads/2013/11/Small-Batch-Brownies-sq-1.jpg",
     "precio": 500,
-    "stock": "30"
-  },
-  {
-    "id": 9,
-    "timestamp": "9/12/2021 8:52:16 P.M.",
-    "nombre": "Hola",
-    "descripcion": "Bizcocho de chocolate pequeño, cubierto con jarabe espeso de chocolate y puede llevar dentro trocitos de nueces, chocolate, butterscotch y mantequilla de maní!",
-    "codigo": "Ca2Ws",
-    "foto": "http://localhost:8080/1639093936906image.jpeg",
-    "precio": 50,
     "stock": "30"
   }
 ]

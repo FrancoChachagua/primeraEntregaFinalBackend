@@ -1,6 +1,5 @@
 import express from 'express';
 import Contenedor from '../classes/Contenedor.js';
-import upload from '../services/upload.js'
 import {io} from '../app.js';
 import { adminOrUser} from '../utils.js';
 
@@ -28,16 +27,15 @@ router.get('/:id?', (req,res)=>{
 
 // POST
 
-router.post('/', adminOrUser , upload.single('image'),(req,res)=>{
+router.post('/' ,adminOrUser,(req,res)=>{
     let product = req.body;
     product.precio = parseInt(product.precio);
-    let foto = 'http://localhost:8080/'+req.file.filename;
-    product.foto = foto;
+    console.log(req.body);
     contenedor.save(product).then(result=>{
         res.send(result);
         if(result.message==="Pedido creado con exito"){
             contenedor.getAll().then(result=>{
-                io.emit('realTimeTable', result)
+                io.emit('realTimeCards', result)
             })
         }
     })
@@ -46,11 +44,10 @@ router.post('/', adminOrUser , upload.single('image'),(req,res)=>{
 
 //PUT
 
-router.put('/:id', adminOrUser, upload.single('image'),(req,res)=>{
+router.put('/:id',adminOrUser,(req,res)=>{
     let body = req.body;
     let id = parseInt(req.params.id);
-    let foto = 'http://localhost:8080/imagenes/'+req.file.filename
-    body.foto = foto;
+    console.log(body,id);
     contenedor.updateProduct(id,body).then(result=>{
         res.send(result);
     })
